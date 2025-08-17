@@ -29,6 +29,7 @@ if ingredients_list:
     ingredients_string = ' '.join(ingredients_list)
 
 time_to_insert = st.button('Submit Order')
+st.write(ingredients_string)
 
 if time_to_insert:
     insert_stmt = """
