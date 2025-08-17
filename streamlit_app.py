@@ -1,9 +1,3 @@
-my_dataframe cannot be used directly in st.multiselect — Streamlit expects a Python list, not a Snowpark DataFrame.
-
-write_pandas(..., table_type="BASE") is only for creating new tables, not appending. For existing tables, it will fail.
-
-Here’s the corrected version of your code:
-
 # Import python packages
 import streamlit as st
 from snowflake.snowpark.functions import col
