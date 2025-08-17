@@ -38,6 +38,6 @@ if time_to_insert and ingredients_string and name_on_order:
     })
 
     # Write to Snowflake
-    session.write_pandas(df_to_insert, "orders", table_type="BASE")  # appends row to orders table
+    session.write_pandas(df_to_insert, "orders")  # appends row to orders table
 
     st.success(f'Your smoothie is ordered, {name_on_order}!', icon="✅")
