@@ -34,7 +34,7 @@ if time_to_insert:
     st.write(name_on_order)
     insert_stmt = f"""
         INSERT INTO SMOOTHIES.PUBLIC.ORDERS (INGREDIENTS, NAME_ON_ORDER)
-        VALUES ('{ingredients_string}', '{name_on_order}').collect()""" 
+        VALUES ('{ingredients_string}', '{name_on_order}')""" 
     st.write(insert_stmt)
     session.sql(insert_stmt)
     st.success(f"Your smoothie is ordered, {name_on_order}!", icon="✅")
