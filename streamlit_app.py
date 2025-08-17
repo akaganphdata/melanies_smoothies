@@ -7,9 +7,8 @@ import pandas as pd  # for creating a small DataFrame to insert
 cnx = st.connection("snowflake")
 session = cnx.session()
 
-# Load available fruits into a Python list
-fruit_df = session.table("smoothies.public.fruit_options").select(col('FRUIT_NAME'))
-fruit_list = fruit_df.to_pandas()['FRUIT_NAME'].tolist()  # convert to list for Streamlit
+# Load available fruits
+my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT_NAME'))
 
 # Streamlit UI
 st.title("Customize Your Smoothie! :cup_with_straw:")
@@ -20,7 +19,7 @@ st.write('The name on your Smoothie will be:', name_on_order)
 
 ingredients_list = st.multiselect(
     'Choose up to 5 ingredients:',
-    fruit_list,
+    my_dataframe,
     max_selections=5
 )
 
@@ -34,12 +33,11 @@ time_to_insert = st.button('Submit Order')
 if time_to_insert and ingredients_string and name_on_order:
     # Create a small Pandas DataFrame with one row to insert
     df_to_insert = pd.DataFrame({
-        "INGREDIENTS": [ingredients_string],  # must match Snowflake column names
-        "NAME_ON_ORDER": [name_on_order]
+        "ingredients": [ingredients_string],
+        "name_on_order": [name_on_order]
     })
 
-    # Append to the existing orders table using Snowpark DataFrame API
-    order_df = session.create_dataframe(df_to_insert)
-    order_df.write.mode("append").save_as_table("smoothies.public.orders")
+    # Write to Snowflake
+    session.write_pandas(df_to_insert, "orders", table_type="BASE")  # appends row to orders table
 
     st.success(f'Your smoothie is ordered, {name_on_order}!', icon="✅")
