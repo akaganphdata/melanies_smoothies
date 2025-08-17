@@ -25,27 +25,21 @@ ingredients_list = st.multiselect(
     , max_selections=5
 )
 
+# Prepare the ingredients string
 ingredients_string = ''
-
 if ingredients_list:
-    #st.write(ingredients_list)
-    #st.text(ingredients_list)
-    
-    for fruit_chosen in ingredients_list:
-        ingredients_string += fruit_chosen + ' '
+    ingredients_string = ' '.join(ingredients_list)
 
-    #st.write(ingredients_string)
+time_to_insert = st.button('Submit Order')
 
-    my_insert_stmt = """insert into smoothies.public.orders(ingredients, name_on_order)
-        values ('""" + ingredients_string + """','""" + name_on_order + """')"""
+if time_to_insert and ingredients_string and name_on_order:
+    # Create a small Pandas DataFrame with one row to insert
+    df_to_insert = pd.DataFrame({
+        "ingredients": [ingredients_string],
+        "name_on_order": [name_on_order]
+    })
 
-    st.write(my_insert_stmt)
-    #st.stop()
-    
-    time_to_insert = st.button('Submit Order')
+    # Write to Snowflake
+    session.write_pandas(df_to_insert, "orders", table_type="BASE")  # appends row to orders table
 
-    if time_to_insert:
-        #if ingredients_string:
-        #session.sql(my_insert_stmt).collect()
-        session._conn.cursor().execute(my_insert_stmt)
-        st.success('Your smoothie is ordered, ' + name_on_order + '!', icon="✅")
+    st.success(f'Your smoothie is ordered, {name_on_order}!', icon="✅")
