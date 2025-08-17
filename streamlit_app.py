@@ -1,7 +1,6 @@
 # Import python packages
 import streamlit as st
-from snowflake.snowpark.functions import col
-import pandas as pd  # for creating a small DataFrame to insert
+from snowflake.snowpark.functions import col, lit
 
 # Connect to Snowflake
 cnx = st.connection("snowflake")
@@ -31,11 +30,13 @@ if ingredients_list:
 time_to_insert = st.button('Submit Order')
 
 if time_to_insert:
-    insert_stmt = f"""
-        INSERT INTO smoothies.public.orders (INGREDIENTS, NAME_ON_ORDER)
-        VALUES ('{ingredients_string}', '{name_on_order}')
-    """
-    st.write(insert_stmt)
-    #session.sql(insert_stmt).execute()
-    #cnx.cursor().execute(insert_stmt)
+    st.write(ingredients_string)
+    st.write(name_on_order)
+    
+    session.table("SMOOTHIES.PUBLIC.ORDERS").insert(
+    {
+        "NAME_ON_ORDER": lit(name_on_order),
+        "INGREDIENTS": lit(ingredients_string)
+    }
+)
     st.success(f"Your smoothie is ordered, {name_on_order}!", icon="✅")
