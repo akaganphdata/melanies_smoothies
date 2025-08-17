@@ -37,5 +37,5 @@ if time_to_insert:
     """
     st.write(insert_stmt)
     #session.sql(insert_stmt).execute()
-    cnx.cursor().execute(insert_stmt)
+    #cnx.cursor().execute(insert_stmt)
     st.success(f"Your smoothie is ordered, {name_on_order}!", icon="✅")
