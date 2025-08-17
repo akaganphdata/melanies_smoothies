@@ -31,13 +31,14 @@ if ingredients_list:
 time_to_insert = st.button('Submit Order')
 
 if time_to_insert and ingredients_string and name_on_order:
-    # Create a small Pandas DataFrame with one row to insert
     df_to_insert = pd.DataFrame({
         "INGREDIENTS": [ingredients_string],
         "NAME_ON_ORDER": [name_on_order]
     })
 
-    # Write to Snowflake
-    session.write_pandas(df_to_insert, "smoothies.public.orders")  # appends row to orders table
+    # Convert to Snowpark DataFrame
+    order_df = session.create_dataframe(df_to_insert)
 
+    # Append to table
+    order_df.write.mode("append").save_as_table("smoothies.public.orders")
     st.success(f'Your smoothie is ordered, {name_on_order}!', icon="✅")
