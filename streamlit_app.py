@@ -33,7 +33,7 @@ time_to_insert = st.button('Submit Order')
 if time_to_insert:
     insert_stmt = """
         INSERT INTO smoothies.public.orders (INGREDIENTS, NAME_ON_ORDER)
-        VALUES (ingredients_list, name_on_order)
+        VALUES (%ingredients_list, %name_on_order)
     """
     st.write(insert_stmt)
     st.success(f"Your smoothie is ordered, {name_on_order}!", icon="✅")
