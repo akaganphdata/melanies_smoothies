@@ -36,6 +36,6 @@ if time_to_insert:
         INSERT INTO smoothies.public.orders (INGREDIENTS, NAME_ON_ORDER)
         VALUES (%s, %s)
     """
-    conn.execute(insert_stmt, (ingredients_string, name_on_order))
+    conn.execute(insert_stmt)
     st.success(f"Your smoothie is ordered, {name_on_order}!", icon="✅")
 
