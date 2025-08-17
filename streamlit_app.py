@@ -46,5 +46,6 @@ if ingredients_list:
 
     if time_to_insert:
         #if ingredients_string:
-        session.sql(my_insert_stmt).collect()
+        #session.sql(my_insert_stmt).collect()
+        session.sql(my_insert_stmt).execute()
         st.success('Your smoothie is ordered, ' + name_on_order + '!', icon="✅")
