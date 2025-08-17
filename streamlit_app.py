@@ -32,11 +32,9 @@ time_to_insert = st.button('Submit Order')
 if time_to_insert:
     st.write(ingredients_string)
     st.write(name_on_order)
-    
-    session.table("SMOOTHIES.PUBLIC.ORDERS").insert(
-    {
-        "NAME_ON_ORDER": lit(name_on_order),
-        "INGREDIENTS": lit(ingredients_string)
-    }
-)
+    session.sql(f"""
+    INSERT INTO SMOOTHIES.PUBLIC.ORDERS (INGREDIENTS, NAME_ON_ORDER)
+    VALUES ('{ingredients_string}', '{name_on_order}')
+    """).collect() 
+   )
     st.success(f"Your smoothie is ordered, {name_on_order}!", icon="✅")
