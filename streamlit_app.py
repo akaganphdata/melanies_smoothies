@@ -23,20 +23,19 @@ ingredients_list = st.multiselect(
     max_selections=5
 )
 
-# Prepare the ingredients string
-ingredients_string = ''
-if ingredients_list:
-    ingredients_string = ' '.join(ingredients_list)
-
 time_to_insert = st.button('Submit Order')
 
 if time_to_insert:
-    insert_stmt = f"""
-        INSERT INTO smoothies.public.orders (INGREDIENTS, NAME_ON_ORDER)
-        VALUES ('{ingredients_string}', '{name_on_order}')
-    """
-    st.write(insert_stmt)
-    #session.sql(insert_stmt).execute()
-    cnx.cursor().execute(insert_stmt)
+    df_to_insert = pd.DataFrame({
+    "INGREDIENTS": [' '.join(ingredients_list)],
+    "NAME_ON_ORDER": [name_on_order]
+    })
+
+    session.write_pandas(
+        df_to_insert,
+        table_name="orders",
+        schema="public",
+        database="smoothies"
+    )
     st.success(f"Your smoothie is ordered, {name_on_order}!", icon="✅")
 
