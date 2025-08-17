@@ -33,8 +33,8 @@ time_to_insert = st.button('Submit Order')
 if time_to_insert and ingredients_string and name_on_order:
     # Create a small Pandas DataFrame with one row to insert
     df_to_insert = pd.DataFrame({
-        "ingredients": [ingredients_string],
-        "name_on_order": [name_on_order]
+        "INGREDIENTS": [ingredients_string],
+        "NAME_ON_ORDER": [name_on_order]
     })
 
     # Write to Snowflake
