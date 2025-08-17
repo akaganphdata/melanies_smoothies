@@ -1,15 +1,14 @@
-# Import Python packages
+# Import python packages
 import streamlit as st
-from snowflake.snowpark import Session
 from snowflake.snowpark.functions import col
+import pandas as pd  # for creating a small DataFrame to insert
 
 # Connect to Snowflake
 cnx = st.connection("snowflake")
 session = cnx.session()
 
-# Load available fruits from Snowflake table
-fruit_df = session.table("smoothies.public.fruit_options").select(col('FRUIT_NAME'))
-fruit_list = [row['FRUIT_NAME'] for row in fruit_df.collect()]
+# Load available fruits
+my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT_NAME'))
 
 # Streamlit UI
 st.title("Customize Your Smoothie! :cup_with_straw:")
@@ -20,28 +19,25 @@ st.write('The name on your Smoothie will be:', name_on_order)
 
 ingredients_list = st.multiselect(
     'Choose up to 5 ingredients:',
-    fruit_list,
+    my_dataframe,
     max_selections=5
 )
 
-# Only proceed if user selected ingredients and entered a name
-if ingredients_list and name_on_order:
+# Prepare the ingredients string
+ingredients_string = ''
+if ingredients_list:
     ingredients_string = ' '.join(ingredients_list)
 
-    # Button to submit order
-    if st.button('Submit Order'):
-        # Create a Snowpark DataFrame for the new order
-        order_df = session.create_dataframe(
-            [(ingredients_string, name_on_order)],
-            schema=["INGREDIENTS", "NAME_ON_ORDER"]  # must match Snowflake table exactly
-        )
+time_to_insert = st.button('Submit Order')
 
-        # Append the new row to the existing orders table
-        order_df.write.mode("append").save_as_table("smoothies.public.orders")
+if time_to_insert and ingredients_string and name_on_order:
+    # Create a small Pandas DataFrame with one row to insert
+    df_to_insert = pd.DataFrame({
+        "ingredients": [ingredients_string],
+        "name_on_order": [name_on_order]
+    })
 
-        st.success(f'Your smoothie is ordered, {name_on_order}!', icon="✅")
-else:
-    if not name_on_order:
-        st.info("Please enter a name for your smoothie.")
-    if not ingredients_list:
-        st.info("Please select at least one ingredient.")
+    # Write to Snowflake
+    session.write_pandas(df_to_insert, "orders", table_type="BASE")  # appends row to orders table
+
+    st.success(f'Your smoothie is ordered, {name_on_order}!', icon="✅")
