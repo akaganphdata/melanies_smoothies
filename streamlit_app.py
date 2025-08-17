@@ -5,7 +5,7 @@ import pandas as pd  # for creating a small DataFrame to insert
 
 # Connect to Snowflake
 cnx = st.connection("snowflake")
-session = cnx.session()
+#session = cnx.session()
 
 # Load available fruits
 my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT_NAME'))
@@ -36,6 +36,6 @@ if time_to_insert:
         INSERT INTO smoothies.public.orders (INGREDIENTS, NAME_ON_ORDER)
         VALUES (%s, %s)
     """
-    conn.execute(insert_stmt)
+    cnx.execute(insert_stmt)
     st.success(f"Your smoothie is ordered, {name_on_order}!", icon="✅")
 
