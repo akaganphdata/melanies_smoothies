@@ -29,13 +29,12 @@ if ingredients_list:
     ingredients_string = ' '.join(ingredients_list)
 
 time_to_insert = st.button('Submit Order')
-st.write(ingredients_string)
 
 if time_to_insert:
     insert_stmt = """
         INSERT INTO smoothies.public.orders (INGREDIENTS, NAME_ON_ORDER)
         VALUES (%s, %s)
     """
-    cnx.execute(insert_stmt)
+    st.write(insert_stmt)
     st.success(f"Your smoothie is ordered, {name_on_order}!", icon="✅")
 
