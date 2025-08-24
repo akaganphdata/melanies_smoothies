@@ -51,7 +51,7 @@ if time_to_insert:
     insert_stmt = f"""
         INSERT INTO SMOOTHIES.PUBLIC.ORDERS (INGREDIENTS, NAME_ON_ORDER)
         VALUES ('{ingredients_string}', '{name_on_order}')""" 
-    st.write(insert_stmt)
+    #st.write(insert_stmt)
     session.sql(insert_stmt).to_pandas()
     st.success(f"Your smoothie is ordered, {name_on_order}!", icon="✅")
 
