@@ -38,3 +38,8 @@ if time_to_insert:
     st.write(insert_stmt)
     session.sql(insert_stmt).to_pandas()
     st.success(f"Your smoothie is ordered, {name_on_order}!", icon="✅")
+
+# changes to display nutrition information 
+import requests
+smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/watermelon")
+st.text(smoothiefroot_response)
