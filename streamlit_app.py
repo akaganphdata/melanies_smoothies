@@ -16,6 +16,7 @@ st.write('The name on your Smoothie will be:', name_on_order)
 
 # Load available fruits
 my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT_NAME'),col('SEARCH_ON'))
+sf_df = st.dataframe(data=my_dataframe, use_container_width = True)
 st.stop()
 
 ingredients_list = st.multiselect(
